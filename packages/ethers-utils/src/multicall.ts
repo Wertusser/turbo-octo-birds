@@ -1,7 +1,7 @@
 import { Contract, Interface, InterfaceAbi, Provider } from "ethers";
-import { MulticallParameters, MulticallReturnType } from "./types/multicall";
-import { ContractFunctionParameters } from "./types/contract";
-import { Hex } from "./types/common";
+import { MulticallParameters, MulticallReturnType } from "./types/multicall.js";
+import { ContractFunctionParameters } from "./types/contract.js";
+import { Hex } from "./types/common.js";
 import { Address } from "abitype";
 
 type Aggregate3Calls = {
@@ -59,7 +59,8 @@ export async function multicall<const contracts extends readonly unknown[]>(
       chunkedCalls[currentChunk] &&
       chunkedCalls[currentChunk]!.length > 0
     ) {
-      chunkedCalls[currentChunk++] = [];
+      currentChunk++;
+      chunkedCalls[currentChunk] = [];
       currentChunkSize = (callData.length - 2) / 2;
     }
 
@@ -113,7 +114,7 @@ export async function multicall<const contracts extends readonly unknown[]>(
       if (result.length === 1) {
         result = result[0];
       }
-      
+
       results.push({ result, status: "success" });
     }
   }

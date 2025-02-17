@@ -5,8 +5,8 @@ import type {
   ContractFunctionName,
   ContractFunctionParameters,
   ContractFunctionReturnType,
-} from "./contract";
-import type { MaybePartial, Prettify } from "./common";
+} from "./contract.js";
+import type { MaybePartial, Prettify } from "./common.js";
 
 export type MulticallContracts<
   contracts extends readonly unknown[],

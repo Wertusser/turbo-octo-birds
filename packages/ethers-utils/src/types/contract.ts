@@ -7,7 +7,7 @@ import {
   ExtractAbiFunction,
   ExtractAbiFunctionNames,
 } from "abitype";
-import { Hex, IsUnion, UnionToTuple, UnionWiden, Widen } from "./common";
+import { Hex, IsUnion, UnionToTuple, UnionWiden, Widen } from "./common.js";
 
 export type ContractFunctionName<
   abi extends Abi | readonly unknown[] = Abi,
