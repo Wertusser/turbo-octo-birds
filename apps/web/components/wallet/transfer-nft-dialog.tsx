@@ -12,6 +12,7 @@ import { UserPicker } from "./user-picker";
 import { User } from "@/lib/types";
 import { Loader2 } from "lucide-react";
 import { useErc721Transfer } from "@/hooks/use-erc721-transfer";
+import { useOwnedNfts } from "@/hooks/use-owned-nfts";
 
 type TransferNFTDialogProps = {
   accessKey: string;
@@ -26,6 +27,8 @@ export function TransferNFTDialog({
   const [open, setOpen] = useState(false);
 
   const { transferERC721, isConfirming, isPending, hash } = useErc721Transfer();
+  const { refetch } = useOwnedNfts(accessKey);
+
   const validInput = !!user;
   const isLoading = isConfirming || isPending;
   const disabled = !validInput || isLoading;
@@ -33,6 +36,7 @@ export function TransferNFTDialog({
   useEffect(() => {
     if (!hash) return;
     setOpen(false);
+    refetch();
   }, [hash]);
 
   return (

@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { TokenBalance, User } from "@/lib/types";
 import { useErc20Transfer } from "@/hooks/use-erc20-transfer";
 import { UserPicker } from "./user-picker";
+import { useERC20Balances } from "@/hooks/use-erc20-balance";
 
 type TransferTokenDialogProps = {
   accessKey: string;
@@ -31,6 +32,8 @@ export function TransferTokenDialog({
   const [amount, setAmount] = useState(0);
 
   const { transferERC20, isConfirming, isPending, hash } = useErc20Transfer();
+  const { refetch } = useERC20Balances(accessKey);
+  
   const validInput = !!user && amount > 0 && amount <= balance;
   const isLoading = isConfirming || isPending;
   const disabled = !validInput || isLoading;
@@ -38,6 +41,7 @@ export function TransferTokenDialog({
   useEffect(() => {
     if (!hash) return;
     setOpen(false);
+    refetch();
   }, [hash]);
 
   return (
