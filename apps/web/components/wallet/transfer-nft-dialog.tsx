@@ -7,21 +7,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { UserPicker } from "./user-picker";
+import { User } from "@/lib/types";
 
 type TransferNFTDialogProps = {
+  accessKey: string;
   asset: any;
-  onConfirm: (name: string) => void;
 };
 
 export function TransferNFTDialog({
+  accessKey,
   asset,
-  onConfirm,
 }: TransferNFTDialogProps) {
-  const [name, setName] = useState("");
-
+  const [user, setUser] = useState<User | null>(null);
+  
   return (
     <Dialog>
       <DialogTrigger>
@@ -37,24 +37,13 @@ export function TransferNFTDialog({
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="recipient">Recipient</Label>
-            <Input
-              id="recipient"
-              placeholder="vitalik"
-              value={name}
-              onChange={(e) => {
-                e.preventDefault();
-                setName(e.target.value);
-              }}
+            <UserPicker
+              accessKey={accessKey}
+              onUserSelect={(user) => setUser(user)}
             />
           </div>
           <DialogClose asChild>
-            <Button
-              type="button"
-              variant="secondary"
-              className="w-full"
-              onClick={() => onConfirm(name)}
-            >
+            <Button type="button" variant="secondary" className="w-full">
               Confirm
             </Button>
           </DialogClose>

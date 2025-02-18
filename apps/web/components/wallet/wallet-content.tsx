@@ -6,18 +6,24 @@ import { useOwnedNfts } from "@/hooks/use-owned-nfts";
 import { TransferTokenDialog } from "./transfer-token-dialog";
 import { TransferNFTDialog } from "./transfer-nft-dialog";
 import { useNameSearch } from "@/hooks/use-name-search";
-import { useTransfer } from "@/hooks/use-transfer";
+import { TokenBalance } from "@/lib/types";
 
 type EVMWalletProps = {
   accessKey: string;
 };
 
 type TokenItemProps = {
-  token: any;
-  onTransfer: (name: string, amount: number) => void;
+  accessKey: string;
+  tokenBalance: TokenBalance;
 };
 
-function TokenItem({ token, onTransfer }: TokenItemProps) {
+type NFTItemProps = {
+  accessKey: string;
+  nft: any;
+};
+
+function TokenItem({ accessKey, tokenBalance }: TokenItemProps) {
+  const { token, balance } = tokenBalance;
   return (
     <div className="flex items-center justify-between py-4 px-6 hover:bg-muted/50 transition-colors">
       <div className="flex items-center space-x-3">
@@ -27,29 +33,24 @@ function TokenItem({ token, onTransfer }: TokenItemProps) {
           className="w-8 h-8 rounded-full bg-slate-300"
         />
         <div>
-          <h3 className="font-medium">{token.token.symbol.toUpperCase()}</h3>
+          <h3 className="font-medium">{token.symbol.toUpperCase()}</h3>
           <p className="text-sm text-muted-foreground text-ellipsis max-w-50 overflow-hidden">
-            {token.token.name}
+            {token.name}
           </p>
         </div>
       </div>
       <div className="flex items-center space-x-4">
-        <span className="font-medium">{token.balance.toFixed(4)}</span>
+        <span className="font-medium">{balance.toFixed(4)}</span>
         <TransferTokenDialog
-          asset={token}
-          onConfirm={(name, amount) => onTransfer(name, amount)}
+          accessKey={accessKey}
+          tokenBalance={tokenBalance}
         />
       </div>
     </div>
   );
 }
 
-type NFTItemProps = {
-  nft: any;
-  onTransfer: (name: string) => void;
-};
-
-function NFTItem({ nft, onTransfer }: NFTItemProps) {
+function NFTItem({ accessKey, nft }: NFTItemProps) {
   // const {
   //   status,
   //   loading,
@@ -70,7 +71,7 @@ function NFTItem({ nft, onTransfer }: NFTItemProps) {
           Quantity: {nft.quantity}
         </p>
       )}
-      <TransferNFTDialog asset={nft} onConfirm={(name) => onTransfer(name)} />
+      <TransferNFTDialog accessKey={accessKey} asset={nft} />
     </div>
   );
 }
@@ -79,8 +80,6 @@ export default function WalletContent({ accessKey }: EVMWalletProps) {
   const { data: tokens = [], isLoading: isTokensLoading } =
     useERC20Balances(accessKey);
   const { data: nfts = [], isLoading: isNftsLoading } = useOwnedNfts(accessKey);
-  const { search } = useNameSearch(accessKey);
-  const { transferERC20, transferERC721 } = useTransfer();
 
   if (!tokens.length && !nfts.length) {
     return <Skeleton />;
@@ -111,52 +110,21 @@ export default function WalletContent({ accessKey }: EVMWalletProps) {
       <TabsContent value="tokens" className="mt-0">
         <div className="divide-y divide-border h-96 overflow-x-hidden overflow-y-auto">
           {tokens.map((token, i) => (
-            <TokenItem
-              key={i}
-              token={token}
-              onTransfer={(name, amount) => {
-                search(name).then((result) => {
-                  const address = result[0]?.address;
-                  if (!address) return;
-                  transferERC20(token.token as any, address, amount);
-                });
-              }}
-            />
+            <TokenItem key={i} accessKey={accessKey} tokenBalance={token} />
           ))}
         </div>
       </TabsContent>
       <TabsContent value="erc721" className="mt-0">
         <div className="grid grid-cols-2 gap-4 p-4 h-96 overflow-x-hidden overflow-y-auto">
           {nfts.map((nft, i) => (
-            <NFTItem
-              key={i}
-              nft={nft}
-              onTransfer={(name) => {
-                search(name).then((result) => {
-                  const address = result[0]?.address;
-                  if (!address) return;
-                  transferERC721(nft.collection, address, nft.tokenId as number);
-                });
-              }}
-            />
+            <NFTItem key={i} accessKey={accessKey} nft={nft} />
           ))}
         </div>
       </TabsContent>
       <TabsContent value="erc1155" className="mt-0">
         <div className="grid grid-cols-2 gap-4 p-4  h-96 overflow-x-hidden overflow-y-auto">
           {nfts.reverse().map((nft, i) => (
-            <NFTItem
-              key={i}
-              nft={nft}
-              onTransfer={(name) => {
-                search(name).then((result) => {
-                  const address = result[0]?.address;
-                  if (!address) return;
-
-                  transferERC721(nft.collection, address, nft.tokenId as number);
-                });
-              }}
-            />
+            <NFTItem key={i} accessKey={accessKey} nft={nft} />
           ))}
         </div>
       </TabsContent>

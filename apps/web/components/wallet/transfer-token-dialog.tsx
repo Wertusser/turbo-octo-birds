@@ -9,23 +9,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowUpRight } from "lucide-react";
-import { useState } from "react";
+import { ArrowUpRight, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { TokenBalance, User } from "@/lib/types";
+import { useErc20Transfer } from "@/hooks/use-erc20-transfer";
+import { UserPicker } from "./user-picker";
 
 type TransferTokenDialogProps = {
-  asset: any;
-  onConfirm: (name: string, amount: number) => void;
+  accessKey: string;
+  tokenBalance: TokenBalance;
 };
 
 export function TransferTokenDialog({
-  asset,
-  onConfirm,
+  accessKey,
+  tokenBalance,
 }: TransferTokenDialogProps) {
-  const [name, setName] = useState("");
+  const { token, balance } = tokenBalance;
+
+  const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [amount, setAmount] = useState(0);
 
+  const { transferERC20, isConfirming, isPending, hash } = useErc20Transfer();
+  const validInput = !!user && amount > 0 && amount <= balance;
+  const isLoading = isConfirming || isPending;
+  const disabled = !validInput || isLoading;
+
+  useEffect(() => {
+    if (!hash) return;
+    setOpen(false);
+  }, [hash]);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -38,21 +54,13 @@ export function TransferTokenDialog({
       </DialogTrigger>
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>
-            Transfer {"name" in asset ? asset.name : asset.symbol}
-          </DialogTitle>
+          <DialogTitle>Transfer {token.symbol}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="recipient">Recipient</Label>
-            <Input
-              id="recipient"
-              placeholder="vitalik"
-              value={name}
-              onChange={(e) => {
-                e.preventDefault();
-                setName(e.target.value);
-              }}
+            <UserPicker
+              accessKey={accessKey}
+              onUserSelect={(user) => setUser(user)}
             />
           </div>
           <div>
@@ -68,18 +76,22 @@ export function TransferTokenDialog({
               }}
             />
 
-            <span className="font-sm">MAX: {asset.balance.toFixed(4)}</span>
+            <span className="font-sm">MAX: {balance.toFixed(4)}</span>
           </div>
-          <DialogClose asChild>
-            <Button
-              type="button"
-              variant="secondary"
-              className="w-full"
-              onClick={() => onConfirm(name, amount)}
-            >
-              Confirm
-            </Button>
-          </DialogClose>
+          {/* <DialogClose asChild> */}
+          <Button
+            type="button"
+            disabled={disabled}
+            variant="secondary"
+            className="w-full"
+            onClick={() => {
+              if (!user) return;
+              transferERC20(token, user.address, amount);
+            }}
+          >
+            {isLoading ? <Loader2 className="animate-spin" /> : `Confirm`}
+          </Button>
+          {/* </DialogClose> */}
         </div>
       </DialogContent>
     </Dialog>
