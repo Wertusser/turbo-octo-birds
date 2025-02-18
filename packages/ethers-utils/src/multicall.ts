@@ -111,12 +111,20 @@ export async function multicall<const contracts extends readonly unknown[]>(
         continue;
       }
 
-      let result = iface.decodeFunctionResult(functionName, returnData);
-      if (result.length === 1) {
-        result = result[0];
-      }
+      try {
+        let result = iface.decodeFunctionResult(functionName, returnData);
+        if (result.length === 1) {
+          result = result[0];
+        }
 
-      results.push({ result, status: "success" });
+        results.push({ result, status: "success" });
+      } catch (error) {
+        results.push({
+          result: undefined,
+          error,
+          status: "failure",
+        });
+      }
     }
   }
 
