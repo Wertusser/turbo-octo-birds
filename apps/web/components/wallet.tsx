@@ -2,17 +2,21 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit2, LogOut, Wallet } from "lucide-react";
+import { LogOut, Wallet } from "lucide-react";
 import { useAccount, useDisconnect } from "wagmi";
 import { shorten } from "@/lib/utils";
 import { useSiwe } from "@/hooks/use-siwe";
-import WalletContent from "./wallet/wallet-content";
+// import WalletContent from "./wallet/wallet-content";
 import { SetNameDialog } from "./wallet/set-name-dialog";
+import { useName } from "@/hooks/use-name";
+import WalletContent from "./wallet/wallet-content";
 
 export function EVMWallet() {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
   const { signSiwe, data } = useSiwe();
+
+  const { name, setName: setNameMutation } = useName(data?.access_token || "");
 
   if (!address || !data) {
     return (
@@ -46,9 +50,12 @@ export function EVMWallet() {
           <span>Wallet</span>
           <div className="flex items-center space-x-2">
             <span className="text-sm font-normal text-muted-foreground">
-              {shorten(address)}
+              {name || shorten(address)}
             </span>
-            <SetNameDialog name={address} onClose={() => []} />
+            <SetNameDialog
+              name={name || address}
+              onConfirm={(name) => setNameMutation(name)}
+            />
             <Button
               variant="ghost"
               size="icon"

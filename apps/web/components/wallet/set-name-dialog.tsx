@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -13,14 +14,14 @@ import { useState } from "react";
 
 type SetNameDialogProps = {
   name: string;
-  onClose: () => void;
+  onConfirm: (name: string) => void;
 };
 
-export function SetNameDialog({ name: name_, onClose }: SetNameDialogProps) {
+export function SetNameDialog({ name: name_, onConfirm }: SetNameDialogProps) {
   const [name, setName] = useState(name_);
 
   return (
-    <Dialog onOpenChange={onClose}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="h-8 w-8">
           <Edit2 className="h-4 w-4" />
@@ -43,7 +44,17 @@ export function SetNameDialog({ name: name_, onClose }: SetNameDialogProps) {
               }}
             />
           </div>
-          <Button className="w-full">Confirm</Button>
+
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full"
+              onClick={() => onConfirm(name)}
+            >
+              Confirm
+            </Button>
+          </DialogClose>
         </div>
       </DialogContent>
     </Dialog>

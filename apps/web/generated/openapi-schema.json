@@ -4,7 +4,9 @@
     "/auth/jwt-siwe": {
       "post": {
         "operationId": "AuthController_verifySIWE",
-        "parameters": [],
+        "parameters": [
+          
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -36,9 +38,35 @@
       }
     },
     "/user": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          
+        ],
+        "responses": {
+          "200": {
+            "description": "The name has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
       "post": {
         "operationId": "UsersController_setName",
-        "parameters": [],
+        "parameters": [
+          
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -67,10 +95,14 @@
         "tags": [
           "Users"
         ]
-      },
-      "search": {
+      }
+    },
+    "/user/search": {
+      "post": {
         "operationId": "UsersController_searchUserByName",
-        "parameters": [],
+        "parameters": [
+          
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -107,7 +139,9 @@
     "/erc20": {
       "get": {
         "operationId": "Erc20Controller_getErc20Balance",
-        "parameters": [],
+        "parameters": [
+          
+        ],
         "responses": {
           "200": {
             "description": "Owned NFTs has been successfully fetched."
@@ -124,7 +158,9 @@
     "/erc721": {
       "get": {
         "operationId": "Erc721Controller_getOwnedErc721",
-        "parameters": [],
+        "parameters": [
+          
+        ],
         "responses": {
           "200": {
             "description": "Owned NFTs has been successfully fetched."
@@ -143,10 +179,16 @@
     "title": "Api example",
     "description": "The API description",
     "version": "1.0",
-    "contact": {}
+    "contact": {
+      
+    }
   },
-  "tags": [],
-  "servers": [],
+  "tags": [
+    
+  ],
+  "servers": [
+    
+  ],
   "components": {
     "schemas": {
       "VerifySiweDto": {
@@ -180,6 +222,12 @@
           "access_token"
         ]
       },
+      "User": {
+        "type": "object",
+        "properties": {
+          
+        }
+      },
       "SetNameDto": {
         "type": "object",
         "properties": {
@@ -192,10 +240,6 @@
         "required": [
           "name"
         ]
-      },
-      "User": {
-        "type": "object",
-        "properties": {}
       },
       "SearchUserDto": {
         "type": "object",

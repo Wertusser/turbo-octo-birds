@@ -1,11 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useERC20Balances } from "@/hooks/use-erc20-balance";
-import { Button } from "../ui/button";
-import { ArrowUpRight } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { Avatar } from "../ui/avatar";
 import { useOwnedNfts } from "@/hooks/use-owned-nfts";
-import { useNft } from "use-nft";
 import { TransferTokenDialog } from "./transfer-token-dialog";
 import { TransferNFTDialog } from "./transfer-nft-dialog";
 

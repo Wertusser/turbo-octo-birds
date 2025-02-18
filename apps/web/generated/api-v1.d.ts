@@ -27,9 +27,25 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["UsersController_findOne"];
         put?: never;
         post: operations["UsersController_setName"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UsersController_searchUserByName"];
         delete?: never;
         options?: never;
         head?: never;
@@ -88,11 +104,11 @@ export interface components {
             /** @description JWT token */
             access_token: string;
         };
+        User: Record<string, never>;
         SetNameDto: {
             /** @example John Doe */
             name: string;
         };
-        User: Record<string, never>;
         SearchUserDto: {
             /** @example John Doe */
             name: string;
@@ -137,6 +153,33 @@ export interface operations {
             };
         };
     };
+    UsersController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The name has been successfully updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     UsersController_setName: {
         parameters: {
             query?: never;
@@ -157,6 +200,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersController_searchUserByName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SearchUserDto"];
+            };
+        };
+        responses: {
+            /** @description The name has been successfully updated. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"][];
                 };
             };
             /** @description Forbidden. */
