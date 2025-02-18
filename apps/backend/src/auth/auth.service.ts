@@ -11,9 +11,21 @@ export class AuthService {
   ) {}
 
   async verifySIWE(address: string, signature: string): Promise<JwtToken> {
-    if (false) {
+    const { verifySiweMessage } = await import('@repo/ethers-utils/siwe');
+
+    const siweMessage = {
+      address: address as `0x${string}`,
+      version: '1' as const,
+      chainId: 137,
+      domain: 'example.com',
+      uri: '',
+      nonce: '',
+    };
+
+    if (!verifySiweMessage(siweMessage, signature)) {
       throw new UnauthorizedException();
     }
+
     const user = await this.usersService.findOrCreate(address);
     const token = new JwtToken();
     token.access_token = await this.jwtService.signAsync({

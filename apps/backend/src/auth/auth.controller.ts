@@ -17,7 +17,7 @@ export class AuthController {
 
   @Post('jwt-siwe')
   @HttpCode(HttpStatus.OK)
-  @ApiBody({ type: [VerifySiweDto] })
+  @ApiBody({ type: VerifySiweDto })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiCreatedResponse({
     description: 'The JWT token  has been successfully created.',

@@ -29,10 +29,11 @@ export class UsersService {
     return await this.usersRepository.create({ address });
   }
 
-  async setName(address: string, name: string) {
+  async setName(address: string, name: string): Promise<User> {
     const user = await this.usersRepository.findOneByOrFail({ address });
     user.name = name;
 
     await this.usersRepository.save(user);
+    return user;
   }
 }
