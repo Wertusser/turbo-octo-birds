@@ -105,7 +105,7 @@
     "name": "Aave Polygon USDC",
     "symbol": "amusdc",
     "address": "0x1a13f4ca1d028320a707d99520abfefca3998b7f",
-    "decimals": 18
+    "decimals": 6
   },
   {
     "name": "Aave Polygon USDT",
@@ -3657,7 +3657,7 @@
     "name": "Matic Aave Interest Bearing USDC",
     "symbol": "mausdc",
     "address": "0x9719d867a500ef117cc201206b8ab51e794d3f82",
-    "decimals": 18
+    "decimals": 6
   },
   {
     "name": "Matr1x",
@@ -6111,13 +6111,13 @@
     "name": "USDC",
     "symbol": "usdc",
     "address": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
-    "decimals": 18
+    "decimals": 6
   },
   {
     "name": "Bridged USD Coin (Wormhole Ethereum)",
     "symbol": "usdcet",
     "address": "0x4318cb63a2b8edf2de971e2f17f77097e499459d",
-    "decimals": 18
+    "decimals": 6
   },
   {
     "name": "USD WINK",
