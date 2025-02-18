@@ -41,14 +41,17 @@ export class AlchemyService {
     });
 
     const { ownedNfts } = await alchemy.nft.getNftsForOwner(walletAddress);
-    return ownedNfts.map((b) => {
-      return {
-        collection: b.contract.address,
-        tokenId: b.tokenId,
-        name: b.name,
-        description: b.description,
-        tokenUri: b.tokenUri,
-      };
-    });
+    return ownedNfts
+      .map((b) => {
+        return {
+          collection: b.contract.address,
+          tokenId: b.tokenId,
+          name: b.name,
+          description: b.description,
+          tokenUri: b.tokenUri,
+          image: b.image.pngUrl,
+        };
+      })
+      .filter((i) => !!i.image);
   }
 }
