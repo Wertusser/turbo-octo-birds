@@ -18,7 +18,7 @@ export type NftBalance = {
 export class AlchemyService {
   async getTokenBalances(walletAddress: string): Promise<Erc20Balance[]> {
     const alchemy = new Alchemy({
-      apiKey: 'demo',
+      apiKey: process.env.ALCHEMY_API_KEY,
       network: Network.MATIC_MAINNET,
     });
 
@@ -36,7 +36,7 @@ export class AlchemyService {
 
   async getOwnedNFTs(walletAddress: string): Promise<NftBalance[]> {
     const alchemy = new Alchemy({
-      apiKey: 'demo',
+      apiKey: process.env.ALCHEMY_API_KEY,
       network: Network.MATIC_MAINNET,
     });
 
