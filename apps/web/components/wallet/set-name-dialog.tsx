@@ -11,14 +11,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit2 } from "lucide-react";
 import { useState } from "react";
+import { useName } from "@/hooks/use-name";
 
 type SetNameDialogProps = {
-  name: string;
-  onConfirm: (name: string) => void;
+  accessKey: string;
 };
 
-export function SetNameDialog({ name: name_, onConfirm }: SetNameDialogProps) {
-  const [name, setName] = useState(name_);
+export function SetNameDialog({ accessKey }: SetNameDialogProps) {
+  const { name, setName: setNameMutation, isLoading } = useName(accessKey);
+  const [nextName, setNextName] = useState(name);
+  const validInput = nextName.length > 0 && nextName !== name;
 
   return (
     <Dialog>
@@ -37,10 +39,10 @@ export function SetNameDialog({ name: name_, onConfirm }: SetNameDialogProps) {
             <Input
               id="name"
               placeholder="vitalik"
-              value={name}
+              value={nextName}
               onChange={(e) => {
                 e.preventDefault();
-                setName(e.target.value);
+                setNextName(e.target.value);
               }}
             />
           </div>
@@ -48,9 +50,10 @@ export function SetNameDialog({ name: name_, onConfirm }: SetNameDialogProps) {
           <DialogClose asChild>
             <Button
               type="button"
+              disabled={!validInput}
               variant="secondary"
               className="w-full"
-              onClick={() => onConfirm(name)}
+              onClick={() => setNameMutation(nextName)}
             >
               Confirm
             </Button>

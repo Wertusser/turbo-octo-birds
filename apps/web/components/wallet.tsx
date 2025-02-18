@@ -10,13 +10,23 @@ import { useSiwe } from "@/hooks/use-siwe";
 import { SetNameDialog } from "./wallet/set-name-dialog";
 import { useName } from "@/hooks/use-name";
 import WalletContent from "./wallet/wallet-content";
+import { useMemo } from "react";
 
 export function EVMWallet() {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
   const { signSiwe, data } = useSiwe();
 
-  const { name, setName: setNameMutation } = useName(data?.access_token || "");
+  const accessKey = data?.access_token || "";
+  const { name, isLoading } = useName(accessKey);
+
+  const walletName = useMemo(
+    () =>
+      name
+        ? `${name} (${shorten(address || "0x0")})`
+        : shorten(address || "0x0"),
+    [name, address]
+  );
 
   if (!address || !data) {
     return (
@@ -32,7 +42,7 @@ export function EVMWallet() {
           {!isConnected ? <ConnectButton /> : null}
           {isConnected && !data ? (
             <Button
-              className={"bg-sky-500/100 text-white font-bold"}
+              className={"bg-[#0E76FD] text-white font-bold px-8"}
               onClick={() => signSiwe()}
             >
               Sign Up
@@ -50,12 +60,9 @@ export function EVMWallet() {
           <span>Wallet</span>
           <div className="flex items-center space-x-2">
             <span className="text-sm font-normal text-muted-foreground">
-              {name || shorten(address)}
+              {isLoading ? "..." : walletName}
             </span>
-            <SetNameDialog
-              name={name || address}
-              onConfirm={(name) => setNameMutation(name)}
-            />
+            <SetNameDialog accessKey={accessKey} />
             <Button
               variant="ghost"
               size="icon"
@@ -68,7 +75,7 @@ export function EVMWallet() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <WalletContent accessKey={data.access_token} />
+        <WalletContent accessKey={accessKey} />
       </CardContent>
     </Card>
   );
