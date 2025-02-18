@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { JsonRpcProvider } from 'ethers';
+import { Injectable, Logger } from '@nestjs/common';
+import { formatUnits, JsonRpcProvider } from 'ethers';
 
-//TODO: fetch erc20 list from db
-import * as ERC20_LIST from './data/erc20.json';
+import ERC20_LIST from './data/erc20.json';
 
 @Injectable()
 export class Erc20Service {
+  private readonly logger = new Logger(Erc20Service.name);
+
   async getERC20List() {
     return ERC20_LIST;
   }
@@ -14,8 +15,7 @@ export class Erc20Service {
     const { erc20Abi } = await import('@repo/ethers-utils/abis');
     const { multicall } = await import('@repo/ethers-utils/multicall');
 
-    const provider = new JsonRpcProvider('https://polygon.llamarpc.com');
-
+    const provider = new JsonRpcProvider(process.env.RPC_URL);
     const tokenList = await this.getERC20List();
 
     //@ts-ignore
@@ -23,31 +23,23 @@ export class Erc20Service {
       //@ts-ignore
       contracts: tokenList.map((token) => ({
         abi: erc20Abi,
-        address: token,
+        address: token.address,
         functionName: `balanceOf`,
         args: [walletAddress],
       })),
     });
 
-    console.log(response);
-  }
+    const result = tokenList
+      .map((token, i) => {
+        const balance = (response[i].result as bigint) || BigInt(0);
+        return {
+          token,
+          balanceUnits: balance.toString(),
+          balance: +formatUnits(balance, token.decimals),
+        };
+      })
+      .filter((b) => b.balance > 0);
 
-  async getERC20BalanceOf(token: any, walletAddresses: string[]) {
-    const { erc20Abi } = await import('@repo/ethers-utils/abis');
-    const { multicall } = await import('@repo/ethers-utils/multicall');
-
-    const provider = new JsonRpcProvider('https://polygon.llamarpc.com');
-
-    //@ts-ignore
-    const response = await multicall(provider, {
-      contracts: walletAddresses.map((walletAddress) => ({
-        abi: erc20Abi,
-        address: token,
-        functionName: `balanceOf`,
-        args: [walletAddress],
-      })),
-    });
-
-    console.log(response);
+    return result;
   }
 }

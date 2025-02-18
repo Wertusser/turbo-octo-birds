@@ -2,14 +2,16 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wallet } from "lucide-react";
-import { useAccount } from "wagmi";
+import { Edit2, LogOut, Wallet } from "lucide-react";
+import { useAccount, useDisconnect } from "wagmi";
 import { shorten } from "@/lib/utils";
 import { useSiwe } from "@/hooks/use-siwe";
 import WalletContent from "./wallet/wallet-content";
+import { SetNameDialog } from "./wallet/set-name-dialog";
 
 export function EVMWallet() {
   const { isConnected, address } = useAccount();
+  const { disconnect } = useDisconnect();
   const { signSiwe, data } = useSiwe();
 
   if (!address || !data) {
@@ -42,8 +44,19 @@ export function EVMWallet() {
       <CardHeader className="border-b border-border">
         <CardTitle className="flex justify-between items-center text-lg">
           <span>Wallet</span>
-          <div>
-            <span>{shorten(address)}</span>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-normal text-muted-foreground">
+              {shorten(address)}
+            </span>
+            <SetNameDialog name={address} onClose={() => []} />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => disconnect()}
+              className="h-8 w-8"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
           </div>
         </CardTitle>
       </CardHeader>
