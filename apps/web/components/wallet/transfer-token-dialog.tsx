@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -9,18 +10,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowUpRight } from "lucide-react";
+import { useState } from "react";
 
 type TransferTokenDialogProps = {
   asset: any;
-  onClose: () => void;
+  onConfirm: (name: string, amount: number) => void;
 };
 
 export function TransferTokenDialog({
   asset,
-  onClose,
+  onConfirm,
 }: TransferTokenDialogProps) {
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState(0);
+
   return (
-    <Dialog onOpenChange={onClose}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -40,14 +45,41 @@ export function TransferTokenDialog({
         <div className="space-y-4">
           <div>
             <Label htmlFor="recipient">Recipient</Label>
-            <Input id="recipient" placeholder="vitalik" />
+            <Input
+              id="recipient"
+              placeholder="vitalik"
+              value={name}
+              onChange={(e) => {
+                e.preventDefault();
+                setName(e.target.value);
+              }}
+            />
           </div>
           <div>
             <Label htmlFor="amount">Amount</Label>
-            <Input id="amount" type="number" placeholder="0" />
+            <Input
+              id="amount"
+              type="number"
+              placeholder="0"
+              value={amount}
+              onChange={(e) => {
+                e.preventDefault();
+                setAmount(Number(e.target.value));
+              }}
+            />
+
             <span className="font-sm">MAX: {asset.balance.toFixed(4)}</span>
           </div>
-          <Button className="w-full">Confirm Transfer</Button>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full"
+              onClick={() => onConfirm(name, amount)}
+            >
+              Confirm
+            </Button>
+          </DialogClose>
         </div>
       </DialogContent>
     </Dialog>

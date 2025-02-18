@@ -5,7 +5,6 @@ import { WagmiProvider } from "wagmi";
 import { polygon } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactNode } from "react";
-import { NftProvider } from "use-nft";
 
 export type Props = {
   children: ReactNode;
