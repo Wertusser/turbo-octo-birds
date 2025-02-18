@@ -17,6 +17,7 @@ const multicall3Abi = new Interface([
 const DEFAULT_BATCH_SIZE = 1024;
 const DEFAULT_MULTICALL_ADDRESS = `0xcA11bde05977b3631167028862bE2a173976CA11`;
 
+//@ts-ignore
 export async function multicall<const contracts extends readonly unknown[]>(
   provider: Provider,
   parameters: MulticallParameters<contracts, true>

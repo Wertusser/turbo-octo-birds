@@ -31,6 +31,8 @@
     "typeorm": "0.3.20",
     "@repo/ethers-utils": "workspace:*",
     "reflect-metadata": "0.2.2",
+    "alchemy-sdk": "3.5.3",
+    "ethers": "6.13.5",
     "rimraf": "6.0.1",
     "rxjs": "7.8.1",
     "pg": "8.13.3"

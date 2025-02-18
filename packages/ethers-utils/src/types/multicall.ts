@@ -22,6 +22,7 @@ export type MulticallContracts<
     ? readonly [
         ...result,
         MaybePartial<
+          //@ts-ignore
           Prettify<
             GetMulticallContractParameters<contract, options["mutability"]> &
               options["properties"]
