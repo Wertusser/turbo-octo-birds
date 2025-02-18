@@ -1,16 +1,16 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wallet } from "lucide-react";
 import { useAccount } from "wagmi";
 import { shorten } from "@/lib/utils";
 import { useSiwe } from "@/hooks/use-siwe";
-import { useERC20Balances } from "@/hooks/use-erc20-balance";
+import WalletContent from "./wallet/wallet-content";
 
 export function EVMWallet() {
   const { isConnected, address } = useAccount();
   const { signSiwe, data } = useSiwe();
-  const { data: balances } = useERC20Balances(data?.access_token || "");
 
   if (!address || !data) {
     return (
@@ -25,7 +25,12 @@ export function EVMWallet() {
           </p>
           {!isConnected ? <ConnectButton /> : null}
           {isConnected && !data ? (
-            <button onClick={() => signSiwe()}>sign Up</button>
+            <Button
+              className={"bg-sky-500/100 text-white font-bold"}
+              onClick={() => signSiwe()}
+            >
+              Sign Up
+            </Button>
           ) : null}
         </CardContent>
       </Card>
@@ -42,7 +47,9 @@ export function EVMWallet() {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>{/* <WalletContent /> */}</CardContent>
+      <CardContent className="p-0">
+        <WalletContent accessKey={data.access_token} />
+      </CardContent>
     </Card>
   );
 }

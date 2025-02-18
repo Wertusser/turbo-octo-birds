@@ -5,6 +5,7 @@ import { WagmiProvider } from "wagmi";
 import { polygon } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactNode } from "react";
+import { NftProvider } from "use-nft";
 
 export type Props = {
   children: ReactNode;
@@ -19,10 +20,11 @@ export function Providers({ children }: Props) {
     ssr: false, // If your dApp uses server side rendering (SSR)
   });
 
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>{children}</RainbowKitProvider>
+          <RainbowKitProvider>{children}</RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
