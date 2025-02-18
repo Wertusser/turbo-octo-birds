@@ -82,7 +82,13 @@ export default function WalletContent({ accessKey }: EVMWalletProps) {
   const { data: nfts = [], isLoading: isNftsLoading } = useOwnedNfts(accessKey);
 
   if (!tokens.length && !nfts.length) {
-    return <Skeleton />;
+    return (
+      <div className="flex flex-col gap-2 p-2">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Skeleton key={index} className="h-16 w-full bg-slate-300" />
+        ))}
+      </div>
+    );
   }
 
   return (
