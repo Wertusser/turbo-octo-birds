@@ -6,6 +6,8 @@ import { Skeleton } from "../ui/skeleton";
 import { Avatar } from "../ui/avatar";
 import { useOwnedNfts } from "@/hooks/use-owned-nfts";
 import { useNft } from "use-nft";
+import { TransferTokenDialog } from "./transfer-token-dialog";
+import { TransferNFTDialog } from "./transfer-nft-dialog";
 
 type EVMWalletProps = {
   accessKey: string;
@@ -34,14 +36,7 @@ function TokenItem({ token }: TokenItemProps) {
       </div>
       <div className="flex items-center space-x-4">
         <span className="font-medium">{token.balance.toFixed(4)}</span>
-        <Button
-          variant="outline"
-          size="icon"
-          // onClick={onTransfer}
-          className="text-muted-foreground hover:text-foreground "
-        >
-          <ArrowUpRight className="h-4 w-4" />
-        </Button>
+        <TransferTokenDialog asset={token} onClose={() => []} />
       </div>
     </div>
   );
@@ -73,14 +68,7 @@ function NFTItem({ nft, onTransfer }: NFTItemProps) {
           Quantity: {nft.quantity}
         </p>
       )}
-      <Button
-        variant="outline"
-        size="sm"
-        className="mt-2 w-full"
-        onClick={onTransfer}
-      >
-        Transfer
-      </Button>
+      <TransferNFTDialog asset={nft} onClose={() => []} />
     </div>
   );
 }
