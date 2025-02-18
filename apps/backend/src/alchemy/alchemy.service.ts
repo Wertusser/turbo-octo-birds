@@ -1,22 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Alchemy, Network } from 'alchemy-sdk';
-
-export type Erc20Balance = {
-  token: string;
-  balanceUnits: string;
-};
-
-export type NftBalance = {
-  collection: string;
-  tokenId: string;
-  name?: string;
-  description?: string;
-  tokenUri?: string;
-};
+import { TokenBalanceDto } from './dto/token-balance.dto';
+import { OwnedNftDto } from './dto/owned-nft.dto';
 
 @Injectable()
 export class AlchemyService {
-  async getTokenBalances(walletAddress: string): Promise<Erc20Balance[]> {
+  async getTokenBalances(walletAddress: string): Promise<TokenBalanceDto[]> {
     const alchemy = new Alchemy({
       apiKey: process.env.ALCHEMY_API_KEY,
       network: Network.MATIC_MAINNET,
@@ -28,13 +17,13 @@ export class AlchemyService {
 
     return tokenBalances.map((b) => {
       return {
-        token: b.contractAddress,
+        tokenAddress: b.contractAddress,
         balanceUnits: b.tokenBalance,
       };
     });
   }
 
-  async getOwnedNFTs(walletAddress: string): Promise<NftBalance[]> {
+  async getOwnedNFTs(walletAddress: string): Promise<OwnedNftDto[]> {
     const alchemy = new Alchemy({
       apiKey: process.env.ALCHEMY_API_KEY,
       network: Network.MATIC_MAINNET,

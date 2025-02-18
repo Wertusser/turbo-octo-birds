@@ -25,7 +25,7 @@ export class Erc20Controller {
     if (value) return JSON.parse(value);
 
     const response = await this.erc20Service.getERC20Balances(user.address);
-    await this.cacheManager.set('key', JSON.stringify(response), 5000);
+    await this.cacheManager.set('key', JSON.stringify(response), 500);
     return response;
   }
 }

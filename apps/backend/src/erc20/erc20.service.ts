@@ -2,16 +2,18 @@ import { Injectable, Logger } from '@nestjs/common';
 import { formatUnits, JsonRpcProvider } from 'ethers';
 
 import ERC20_LIST from './data/erc20.json';
+import { ERC20BalanceDto } from './dto/erc20-balance.dto';
+import { ERC20Dto } from './dto/erc20.dto';
 
 @Injectable()
 export class Erc20Service {
   private readonly logger = new Logger(Erc20Service.name);
 
-  async getERC20List() {
+  async getERC20List(): Promise<ERC20Dto[]> {
     return ERC20_LIST;
   }
 
-  async getERC20Balances(walletAddress: string) {
+  async getERC20Balances(walletAddress: string): Promise<ERC20BalanceDto[]> {
     const { erc20Abi } = await import('@repo/ethers-utils/abis');
     const { multicall } = await import('@repo/ethers-utils/multicall');
 

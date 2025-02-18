@@ -1,10 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ERC20Dto } from './erc20.dto';
 
-export class Erc20BalanceDto {
+export class ERC20BalanceDto {
+  token: ERC20Dto;
+  
   @ApiProperty({
-    description: '',
+    description: 'Corresponding token balance in token units',
     type: String,
-    example: 'John Doe',
+    example: '90230000000',
   })
-  addres: string;
+  balanceUnits: string;
+
+  @ApiProperty({
+    description: 'Token balance as number',
+    type: String,
+    example: '90.23',
+  })
+  balance: number;
 }
