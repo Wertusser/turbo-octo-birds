@@ -20,8 +20,6 @@ services:
     build:
       context: .
       dockerfile: ./apps/backend/Dockerfile
-    ports:
-      - "4242:4242"
     env_file:
       - ./apps/backend/.env
     environment:
@@ -37,8 +35,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
