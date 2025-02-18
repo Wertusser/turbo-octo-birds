@@ -19,3 +19,11 @@ export type TokenBalance = {
   balanceUnits: string;
   balance: number;
 };
+
+export type ERC721 = {
+  collection: string;
+  tokenId: string;
+  name?: string;
+  description?: string;
+  tokenUri?: string;
+};

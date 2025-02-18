@@ -47,7 +47,6 @@ export function UserPicker({ accessKey, onUserSelect }: Props) {
   }, [selectedUser]);
 
   const isLoading = isPending || query !== inputValue;
-  console.log(query, inputValue, isPending);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -60,11 +59,6 @@ export function UserPicker({ accessKey, onUserSelect }: Props) {
         >
           {selectedUser ? (
             <>
-              <Avatar className="mr-2 h-6 w-6">
-                <AvatarImage src={selectedUser.name} alt={selectedUser.name} />
-                <AvatarFallback>
-                </AvatarFallback>
-              </Avatar>
               {selectedUser.name} ({shorten(selectedUser.address)})
             </>
           ) : (
@@ -81,22 +75,25 @@ export function UserPicker({ accessKey, onUserSelect }: Props) {
             onValueChange={setInputValue}
           />
           <CommandList>
-            {!isLoading ? (
-              <CommandEmpty className="w-full">No user found.</CommandEmpty>
+            {users.length === 0 && (!isLoading || inputValue.length === 0) ? (
+              <CommandEmpty>No user found.</CommandEmpty>
             ) : null}
 
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, index) => (
+                  <div key={index} className="flex gap-2 p-2">
+                    <Skeleton className="h-6 w-6 rounded-full mr-2 bg-slate-300" />
+                    <div className="flex-1 space-y-1">
+                      <Skeleton className="h-4 w-3/4 bg-slate-300" />
+                      <Skeleton className="h-3 w-1/2 bg-slate-300" />
+                    </div>
+                  </div>
+                ))
+              : null}
+
             <CommandGroup>
-              {isLoading
-                ? Array.from({ length: 3 }).map((_, index) => (
-                    <CommandItem key={index} disabled>
-                      <Skeleton className="h-6 w-6 rounded-full mr-2 bg-black" />
-                      <div className="flex-1 space-y-1">
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-3 w-1/2" />
-                      </div>
-                    </CommandItem>
-                  ))
-                : users.map((user) => (
+              {!isLoading && query.length > 0 && inputValue.length > 0
+                ? users.map((user) => (
                     <CommandItem
                       key={user.id}
                       value={user.name}
@@ -107,13 +104,12 @@ export function UserPicker({ accessKey, onUserSelect }: Props) {
                     >
                       <Avatar className="mr-2 h-6 w-6">
                         <AvatarImage src={user.name} alt={user.name} />
-                        <AvatarFallback>
-                        </AvatarFallback>
+                        <AvatarFallback></AvatarFallback>
                       </Avatar>
                       <div className="flex-1 overflow-hidden">
                         <p className="truncate">{user.name}</p>
                         <p className="truncate text-sm text-muted-foreground">
-                          {user.address}
+                          {shorten(user.address)}
                         </p>
                       </div>
                       <Check
@@ -125,7 +121,8 @@ export function UserPicker({ accessKey, onUserSelect }: Props) {
                         )}
                       />
                     </CommandItem>
-                  ))}
+                  ))
+                : null}
             </CommandGroup>
           </CommandList>
         </Command>

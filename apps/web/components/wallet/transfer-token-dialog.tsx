@@ -82,8 +82,8 @@ export function TransferTokenDialog({
           <Button
             type="button"
             disabled={disabled}
-            variant="secondary"
-            className="w-full"
+            variant="outline"
+            className="mt-2 w-full"
             onClick={() => {
               if (!user) return;
               transferERC20(token, user.address, amount);

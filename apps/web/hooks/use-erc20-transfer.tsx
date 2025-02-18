@@ -10,14 +10,14 @@ export const useErc20Transfer = () => {
       hash,
     });
 
-  const transferERC20 = (token: Token, address: Hex, amount: number) => {
+  const transferERC20 = (token: Token, to: Hex, amount: number) => {
     const amountUnits = parseUnits(String(amount), token.decimals);
 
     writeContract({
       address: token.address,
       abi: erc20Abi,
       functionName: "transfer",
-      args: [address as Hex, amountUnits],
+      args: [to as Hex, amountUnits],
     });
   };
 

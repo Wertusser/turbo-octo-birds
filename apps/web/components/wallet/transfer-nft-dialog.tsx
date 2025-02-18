@@ -7,9 +7,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserPicker } from "./user-picker";
 import { User } from "@/lib/types";
+import { Loader2 } from "lucide-react";
+import { useErc721Transfer } from "@/hooks/use-erc721-transfer";
 
 type TransferNFTDialogProps = {
   accessKey: string;
@@ -21,9 +23,20 @@ export function TransferNFTDialog({
   asset,
 }: TransferNFTDialogProps) {
   const [user, setUser] = useState<User | null>(null);
-  
+  const [open, setOpen] = useState(false);
+
+  const { transferERC721, isConfirming, isPending, hash } = useErc721Transfer();
+  const validInput = !!user;
+  const isLoading = isConfirming || isPending;
+  const disabled = !validInput || isLoading;
+
+  useEffect(() => {
+    if (!hash) return;
+    setOpen(false);
+  }, [hash]);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button variant="outline" size="sm" className="mt-2 w-full">
           Transfer
@@ -42,11 +55,18 @@ export function TransferNFTDialog({
               onUserSelect={(user) => setUser(user)}
             />
           </div>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary" className="w-full">
-              Confirm
-            </Button>
-          </DialogClose>
+          <Button
+            type="button"
+            disabled={disabled}
+            variant="outline"
+            className="mt-2 w-full"
+            onClick={() => {
+              if (!user) return;
+              transferERC721(asset, user.address);
+            }}
+          >
+            {isLoading ? <Loader2 className="animate-spin" /> : `Confirm`}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
