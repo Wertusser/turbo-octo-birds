@@ -6,7 +6,7 @@ import {
   useWriteContract,
 } from "wagmi";
 
-export const useErc721Transfer = () => {
+export const useErc721Transfer = (): any => {
   const { address } = useAccount();
   const { writeContract, data: hash, error, isPending } = useWriteContract();
 

@@ -2,7 +2,7 @@ import { Token } from "@/lib/types";
 import { erc20Abi, Hex, parseUnits } from "viem";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
-export const useErc20Transfer = () => {
+export const useErc20Transfer = (): any => {
   const { writeContract, data: hash, error, isPending } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =

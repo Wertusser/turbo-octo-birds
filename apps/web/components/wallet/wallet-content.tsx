@@ -25,7 +25,7 @@ type NFTItemProps = {
 function TokenItem({ accessKey, tokenBalance }: TokenItemProps) {
   const { token, balance } = tokenBalance;
   return (
-    <div className="flex items-center justify-between py-4 px-6 hover:bg-muted/50 transition-colors">
+    <div className="flex items-center justify-between py-4 px-6 hover:bg-muted/50 transition-colors border-b-[1px]">
       <div className="flex items-center space-x-3">
         <Avatar
           // src={token.token.icon || "/placeholder.svg"}

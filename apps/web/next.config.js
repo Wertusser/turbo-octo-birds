@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   async rewrites() {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:4242/:path*",
+        destination: `http://backend:4242/:path*`,
       },
     ];
   },
