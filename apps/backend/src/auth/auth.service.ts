@@ -18,8 +18,9 @@ export class AuthService {
       version: '1' as const,
       chainId: 137,
       domain: 'example.com',
-      uri: '',
-      nonce: '',
+      uri: 'http://example.com',
+      nonce: 'foobarbaz',
+      issuedAt: new Date(0)
     };
 
     if (!verifySiweMessage(siweMessage, signature)) {

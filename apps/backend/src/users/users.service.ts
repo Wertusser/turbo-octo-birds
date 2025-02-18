@@ -10,12 +10,12 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
-  }
-
-  async findByName(name: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ name });
+  async searchUser(name: string): Promise<User[]> {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.name like :name', { name: `%${name}%` })
+      .limit(5)
+      .getMany();
   }
 
   async findByAddress(address: string): Promise<User | null> {
@@ -23,10 +23,10 @@ export class UsersService {
   }
 
   async findOrCreate(address: string) {
-    const user = await this.usersRepository.findOneBy({ address });
+    const user = await this.findByAddress(address);
     if (user) return user;
 
-    return await this.usersRepository.create({ address });
+    return this.usersRepository.create({ address, name: address });
   }
 
   async setName(address: string, name: string): Promise<User> {

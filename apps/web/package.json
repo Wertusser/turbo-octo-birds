@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
+    "openapi": "openapi-typescript ./generated/openapi-schema.json -o ./generated/api-v1.d.ts",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -24,7 +25,10 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "lucide-react": "^0.475.0",
-    "next": "^15.1.6",
+    "next": "15.1.7",
+    "@next/env": "15.1.7",
+    "openapi-fetch": "^0.13.4",
+    "openapi-react-query": "^0.3.0",
     "postcss": "^8.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -41,6 +45,7 @@
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "eslint": "^9.20.0",
+    "openapi-typescript": "^7.6.1",
     "typescript": "5.7.3"
   }
 }
